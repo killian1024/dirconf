@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
     
     dirconf::program prog(
             ap.get_front_arg_value_as<std::filesystem::path>("DIR"),
-            ap.get_arg_values_as<std::string>("--categories-files", {".dirconf.json"}),
+            ap.get_arg_values_as<std::string>("--configuration-files", {".dirconf.json"}),
             dirconf::file_managers::NEMO);
     
     return prog.execute();
