@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     ap.add_key_value_arg({"--configuration-files", "-cf"}, "Configuration files names.",
                          {spdap::avt_t::STRING}, 1u, ~0u);
     ap.add_help_arg({"--help"}, "Display this help and exit.");
-    ap.add_gplv3_version_arg({"--version"}, "Output version information and exit", "1.0", "2018",
+    ap.add_gplv3_version_arg({"--version"}, "Output version information and exit", "1.0.0", "2018",
                              "Killian Poulaud");
     ap.add_foreign_arg("DIR", "Directory", "", {spdap::avt_t::RWX_DIR});
     ap.parse_args((unsigned int)argc, argv);
