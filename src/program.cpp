@@ -59,7 +59,7 @@ bool program::execute_in_directory(
     std::filesystem::path conf_pth;
     bool found = false;
     bool sucss = true;
-    bool recur;
+    bool recur = false;
     
     conf_pth = dir_pth;
     conf_pth /= ".";
@@ -68,7 +68,7 @@ bool program::execute_in_directory(
     {
         conf_pth.replace_filename(x);
         
-        if (std::filesystem::is_regular_file(conf_pth))
+        if (spdsys::is_regular_file(conf_pth.c_str()))
         {
             found = true;
             break;
@@ -77,8 +77,9 @@ bool program::execute_in_directory(
     if (!found && !last_conf_pth.empty())
     {
         conf_pth = last_conf_pth;
+        found = true;
     }
-    if (!conf_pth.empty())
+    if (found)
     {
         std::cout << spdios::set_light_blue_text
                   << "Applying configuration " << conf_pth.filename() << " in " << dir_pth;
