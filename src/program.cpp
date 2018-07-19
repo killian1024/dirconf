@@ -135,33 +135,39 @@ bool program::apply_configuration(
     try
     {
         pt::ptree root;
-        std::string icon_pth;
-        std::string vie;
-        std::size_t zoom_levl;
-        bool compact_layt;
+        std::string icon_ptah;
+        std::string view;
+        std::size_t icon_view_zoom_level;
+        std::size_t list_view_zoom_level;
+        bool compact_layaut;
         const char* val;
         
         pt::read_json(conf_pth, root);
         
-        icon_pth = root.get<std::string>("icon-path", "");
-        vie = root.get<std::string>("view", "");
-        zoom_levl = root.get<std::size_t>("zoom-level", 0);
-        compact_layt = root.get<bool>("compact-layout", false);
+        icon_ptah = root.get<std::string>("icon-path", "");
+        view = root.get<std::string>("view", "");
+        icon_view_zoom_level = root.get<std::size_t>("icon-view-zoom-level", 0);
+        list_view_zoom_level = root.get<std::size_t>("list-view-zoom-level", 0);
+        compact_layaut = root.get<bool>("compact-layout", false);
         *recur = root.get<bool>("apply-recursively", false);
         
-        if (!icon_pth.empty())
+        if (!icon_ptah.empty())
         {
-            if (!apply_gvfs_attribute(dir_pth.c_str(), "metadata::custom-icon", icon_pth.c_str()))
+            if (!apply_gvfs_attribute(dir_pth.c_str(), "metadata::custom-icon", icon_ptah.c_str()))
             {
                 sucss = false;
             }
         }
         
-        if (!vie.empty())
+        if (!view.empty())
         {
-            if (vie == "icons")
+            if (view == "icons")
             {
                 val = "OAFIID:Nemo_File_Manager_Icon_View";
+            }
+            else if (view == "compact")
+            {
+                val = "OAFIID:Nemo_File_Manager_Compact_View";
             }
             else
             {
@@ -176,17 +182,27 @@ bool program::apply_configuration(
         }
         end_view:
         
-        if (zoom_levl != 0)
+        if (icon_view_zoom_level != 0)
         {
-            std::string str_zoom_levl = std::to_string(zoom_levl);
+            std::string str_zoom_levl = std::to_string(icon_view_zoom_level);
             if (!apply_gvfs_attribute(dir_pth.c_str(), "metadata::nemo-icon-view-zoom-level",
                                       str_zoom_levl.c_str()))
             {
                 sucss = false;
             }
         }
+    
+        if (list_view_zoom_level != 0)
+        {
+            std::string str_zoom_levl = std::to_string(list_view_zoom_level);
+            if (!apply_gvfs_attribute(dir_pth.c_str(), "metadata::nemo-list-view-zoom-level",
+                                      str_zoom_levl.c_str()))
+            {
+                sucss = false;
+            }
+        }
         
-        std::string str_compact_layt = compact_layt ? "true" : "false";
+        std::string str_compact_layt = compact_layaut ? "true" : "false";
         if (!apply_gvfs_attribute(dir_pth.c_str(), "metadata::nemo-icon-view-auto-layout",
                                   str_compact_layt.c_str()))
         {
