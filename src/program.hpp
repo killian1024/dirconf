@@ -25,6 +25,7 @@
 #define DIRCONF_PROGRAM_HPP
 
 #include <filesystem>
+#include <set>
 #include <vector>
 
 #include <speed/speed.hpp>
@@ -44,13 +45,17 @@ public:
             spdcontain::flags<file_managers> fle_managrs
     );
     
-    int execute() const;
+    int execute();
     
 private:
     bool execute_in_directory(
             const std::filesystem::path& dir_pth,
             const std::filesystem::path& last_conf_pth
-    ) const;
+    );
+    
+    void visit_inode(const std::filesystem::path& dir_pth);
+    
+    bool is_inode_visited(const std::filesystem::path& dir_pth) const noexcept;
     
     bool apply_configuration(
             const std::filesystem::path& dir_pth,
@@ -58,10 +63,12 @@ private:
             bool* recur
     ) const;
     
-    bool apply_gvfs_attribute(const char* fle, const char* attr, const char* val) const;
+    bool apply_gvfs_attribute(const char* fle, const char* attr, const char* val) const noexcept;
     
 private:
     std::filesystem::path src_pth_;
+    
+    std::set<std::uint64_t> vistd_inos_;
     
     std::vector<std::string> conf_nmes_;
     

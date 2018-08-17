@@ -41,11 +41,12 @@ program::program(
         : src_pth_(std::move(src_pth))
         , conf_nmes_(std::move(conf_nmes))
         , fle_managrs_(std::move(fle_managrs))
+        , vistd_inos_()
 {
 }
 
 
-int program::execute() const
+int program::execute()
 {
     return execute_in_directory(src_pth_, std::filesystem::path()) ? 0 : -1;
 }
@@ -54,12 +55,14 @@ int program::execute() const
 bool program::execute_in_directory(
         const std::filesystem::path& dir_pth,
         const std::filesystem::path& last_conf_pth
-) const
+)
 {
     std::filesystem::path conf_pth;
     bool found = false;
     bool sucss = true;
     bool recur = false;
+    
+    visit_inode(dir_pth);
     
     conf_pth = dir_pth;
     conf_pth /= ".";
@@ -99,7 +102,7 @@ bool program::execute_in_directory(
     {
         for (auto& x : std::filesystem::directory_iterator(dir_pth))
         {
-            if (std::filesystem::is_directory(x) || std::filesystem::is_symlink(x))
+            if (std::filesystem::is_directory(x) && !is_inode_visited(x))
             {
                 if (!execute_in_directory(x.path(), recur ? conf_pth : std::filesystem::path()))
                 {
@@ -118,6 +121,18 @@ bool program::execute_in_directory(
     }
     
     return sucss;
+}
+
+
+void program::visit_inode(const std::filesystem::path& dir_pth)
+{
+    vistd_inos_.insert(spdsys::get_file_inode(dir_pth.c_str()));
+}
+
+
+bool program::is_inode_visited(const std::filesystem::path& dir_pth) const noexcept
+{
+    return vistd_inos_.count(spdsys::get_file_inode(dir_pth.c_str())) > 0;
 }
 
 
@@ -223,7 +238,11 @@ bool program::apply_configuration(
 }
 
 
-bool program::apply_gvfs_attribute(const char* fle, const char* attr, const char* val) const
+bool program::apply_gvfs_attribute(
+        const char* fle,
+        const char* attr,
+        const char* val
+) const noexcept
 {
     GFile* gfle;
     GFileAttributeType typ;
