@@ -36,7 +36,7 @@ namespace dirconf {
 program::program(
         std::filesystem::path src_pth,
         std::vector<std::string> conf_nmes,
-        spdcontain::flags<file_managers> fle_managrs
+        spd::contain::flags<file_managers> fle_managrs
 )
         : src_pth_(std::move(src_pth))
         , conf_nmes_(std::move(conf_nmes))
@@ -71,7 +71,7 @@ bool program::execute_in_directory(
     {
         conf_pth.replace_filename(x);
         
-        if (spdsys::is_regular_file(conf_pth.c_str()))
+        if (spd::sys::is_regular_file(conf_pth.c_str()))
         {
             found = true;
             break;
@@ -84,17 +84,17 @@ bool program::execute_in_directory(
     }
     if (found)
     {
-        std::cout << spdios::set_light_blue_text
+        std::cout << spd::ios::set_light_blue_text
                   << "Applying configuration " << conf_pth.filename() << " in " << dir_pth;
         
         if (!apply_configuration(dir_pth, conf_pth, &recur))
         {
             sucss = false;
-            std::cout << spdios::set_light_red_text << " [fail]" << spdios::newl;
+            std::cout << spd::ios::set_light_red_text << " [fail]" << spd::ios::newl;
         }
         else
         {
-            std::cout << spdios::set_light_green_text << " [ok]" << spdios::newl;
+            std::cout << spd::ios::set_light_green_text << " [ok]" << spd::ios::newl;
         }
     }
     
@@ -113,9 +113,9 @@ bool program::execute_in_directory(
     }
     catch (const std::filesystem::filesystem_error& fe)
     {
-        std::cerr << spdios::set_light_red_text
+        std::cerr << spd::ios::set_light_red_text
                   << "Error executing in directory: " << dir_pth
-                  << spdios::newl;
+                  << spd::ios::newl;
         
         return false;
     }
@@ -126,13 +126,13 @@ bool program::execute_in_directory(
 
 void program::visit_inode(const std::filesystem::path& dir_pth)
 {
-    vistd_inos_.insert(spdsys::get_file_inode(dir_pth.c_str()));
+    vistd_inos_.insert(spd::sys::get_file_inode(dir_pth.c_str()));
 }
 
 
 bool program::is_inode_visited(const std::filesystem::path& dir_pth) const noexcept
 {
-    return vistd_inos_.count(spdsys::get_file_inode(dir_pth.c_str())) > 0;
+    return vistd_inos_.count(spd::sys::get_file_inode(dir_pth.c_str())) > 0;
 }
 
 

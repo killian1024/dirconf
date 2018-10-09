@@ -1,6 +1,6 @@
 ### dirconf ###
 
-dirconf is a simple C++ program whose propose is apply directories configuration files. Currently 
+dirconf is a simple C++ program whose propose is apply directories configuration files mainly editing the GNOME Virtual file system directories metatada. Currently 
 only implemented for nemo. For more 
 information use `./dirconf --help` command.
 

@@ -29,6 +29,7 @@
 #include <vector>
 
 #include <speed/speed.hpp>
+#include <speed/speed_alias.hpp>
 
 #include "file_managers.hpp"
 
@@ -42,7 +43,7 @@ public:
     program(
             std::filesystem::path src_pth,
             std::vector<std::string> conf_nmes,
-            spdcontain::flags<file_managers> fle_managrs
+            spd::contain::flags<file_managers> fle_managrs
     );
     
     int execute();
@@ -72,7 +73,7 @@ private:
     
     std::vector<std::string> conf_nmes_;
     
-    spdcontain::flags<file_managers> fle_managrs_;
+    spd::contain::flags<file_managers> fle_managrs_;
 };
 
 
