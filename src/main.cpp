@@ -26,13 +26,29 @@
 int main(int argc, char* argv[])
 {
     spd::ap::arg_parser ap("dirconf");
-    ap.add_help_text("Options:");
-    ap.add_key_value_arg({"--configuration-files", "-cf"}, "Configuration files names.",
+    ap.add_help_text("Apply directories configuration files editing the GNOME Virtual file system "
+                     "directories metatada. JSON files are used to specify the configuration in "
+                     "the directories. Currently is only implemented for nemo.");
+    ap.add_key_value_arg({"--configuration-files", "-cf"},
+                         "Configuration files names. The default value is '.dirconf.json'.",
                          {spd::ap::avt_t::STRING}, 1u, ~0u);
     ap.add_help_arg({"--help"}, "Display this help and exit.");
     ap.add_gplv3_version_arg({"--version"}, "Output version information and exit", "1.0.0", "2018",
                              "Killian Poulaud");
     ap.add_keyless_arg("DIR", "Directory", "", {spd::ap::avt_t::RWX_DIR});
+    ap.add_help_text("");
+    ap.add_help_text("Example:\n"
+                     "$ dirconf /home/user");
+    ap.add_help_text("");
+    ap.add_help_text("Example of JSON file:\n"
+                     "{\n"
+                     "    \"icon-path\" : \"\",\n"
+                     "    \"view\": \"icons\",\n"
+                     "    \"icon-view-zoom-level\" : 4,\n"
+                     "    \"list-view-zoom-level\" : 1,\n"
+                     "    \"compact-layout\" : true,\n"
+                     "    \"apply-recursively\" : false\n"
+                     "}");
     ap.parse_args((unsigned int)argc, argv);
     
     dirconf::program prog(
